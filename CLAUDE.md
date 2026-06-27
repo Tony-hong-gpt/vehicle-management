@@ -317,3 +317,87 @@ function getNextInspectionDate(lastDate: Date, capacity: number): Date {
 - **GitHub**: `https://github.com/Tony-hong-gpt/vehicle-system`
 - **배포**: Vercel (main 브랜치 push 시 자동 배포)
 - **패키지 매니저**: npm
+
+---
+
+## 새 PC에서 개발 환경 셋업
+
+### 1. 사전 설치 (없는 경우만)
+
+```bash
+# Node.js 22 LTS 설치 확인
+node -v   # v22.x.x 이상 필요
+
+# Git 설치 확인
+git --version
+
+# Docker Desktop 설치 필요 (Supabase 로컬 실행용)
+# https://www.docker.com/products/docker-desktop/
+
+# Supabase CLI 설치
+npm install -g supabase
+```
+
+### 2. 프로젝트 Clone
+
+```bash
+git clone https://github.com/Tony-hong-gpt/vehicle-system.git
+cd vehicle-system
+npm install
+```
+
+### 3. 환경변수 설정
+
+프로젝트 루트에 `.env.local` 파일 생성:
+
+```bash
+# 로컬 Supabase 주소 (supabase start 실행 후 터미널에 표시되는 값으로 교체)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54341
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key 값>
+```
+
+### 4. Supabase 로컬 실행
+
+```bash
+# Docker Desktop이 실행 중인 상태에서
+supabase start
+
+# 실행 완료 후 출력되는 값을 .env.local에 입력:
+# API URL     → NEXT_PUBLIC_SUPABASE_URL
+# anon key    → NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Supabase Studio: http://localhost:54343
+
+### 5. DB 초기화 (처음 셋업 시 1회)
+
+```bash
+# 마이그레이션 + 시드 데이터 적용
+supabase db reset
+```
+
+Supabase Studio → SQL Editor에서 추가 마이그레이션 수동 실행:
+- `supabase/migrations/004_add_missing_consumables.sql`
+
+### 6. 개발 서버 실행
+
+```bash
+npm run dev
+# → http://localhost:3000
+```
+
+### 7. Claude Code 프로젝트 폴더 지정
+
+새 PC에서 Claude Code 실행 시 PC마다 경로가 다르므로,
+Claude Code를 열고 **프로젝트 폴더를 clone한 경로로 지정**한 후 시작.
+
+---
+
+### 포트 정리
+
+| 서비스 | 주소 |
+|--------|------|
+| Next.js 개발 서버 | http://localhost:3000 |
+| Supabase API | http://localhost:54341 |
+| Supabase Studio | http://localhost:54343 |
+| Supabase Mailpit | http://localhost:54344 |
